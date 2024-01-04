@@ -15,7 +15,9 @@ class VocabDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [],
+      ),
       body: GetBuilder<VocabController>(
         init: VocabController(),
         builder: (controller) {
@@ -39,10 +41,41 @@ class VocabDetailScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 50),
                     CustomButton(
-                        title: "count",
-                        ontap: () {
-                          controller.countVocab(vocab.sId);
-                        })
+                      title: "count",
+                      ontap: () {
+                        controller.countVocab(vocab.sId);
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    CustomButton(
+                      title: "delete",
+                      ontap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Do you want to delete'),
+                              content: Text('Do you want to delete'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    controller.deleteVocab(vocab.sId);
+                                  },
+                                  child: Text('OK'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Cancel'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      color: Colors.red,
+                    )
                   ],
                 ),
               ),

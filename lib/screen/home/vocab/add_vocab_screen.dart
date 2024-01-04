@@ -38,13 +38,14 @@ class VocabAddScreen extends StatelessWidget {
                             buildTextFeild(controller.mean, "Mean"),
                             SizedBox(height: 10),
                             CustomButton(
-                                title: "Add",
-                                ontap: () {
-                                  if (controller.word.text.length != 0 &&
-                                      controller.mean.text.length != 0) {
-                                    controller.addVocab();
-                                  }
-                                })
+                              title: "Add",
+                              ontap: () {
+                                if (controller.word.text.length != 0 &&
+                                    controller.mean.text.length != 0) {
+                                  controller.addVocab();
+                                }
+                              },
+                            )
                           ],
                         ),
                       ),

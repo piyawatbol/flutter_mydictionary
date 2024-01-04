@@ -10,21 +10,28 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: GetBuilder<VocabController>(
-        init: VocabController(),
-        builder: (controller) {
-          return Container(
-            width: size.width,
-            height: size.height,
-            child: SafeArea(
-              child: Column(
-                children: [buildMenuList()],
+    return GetBuilder<VocabController>(
+      init: VocabController(),
+      builder: (controller) {
+        return Scaffold(
+            appBar: AppBar(
+              title: AutoText(
+                "MyDictionary",
+                fontSize: 20,
               ),
             ),
-          );
-        },
-      ),
+            body: Container(
+              width: size.width,
+              height: size.height,
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    buildMenuList(),
+                  ],
+                ),
+              ),
+            ));
+      },
     );
   }
 

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mydictionary/controllers/vacab_controller.dart';
-import 'package:flutter_mydictionary/models/vocab_model.dart';
-import 'package:flutter_mydictionary/screen/home/vocab/vocab_detail_screen.dart';
-import 'package:flutter_mydictionary/widget/autext/auto_text.dart';
 import 'package:get/get.dart';
 
-class VocabScreen extends StatelessWidget {
-  const VocabScreen({super.key});
+import '../../../models/vocab_model.dart';
+import '../../../widget/autext/auto_text.dart';
+import '../vocab/vocab_detail_screen.dart';
+
+class FindDetailScreen extends StatelessWidget {
+  final List<VocabModel> vocabList;
+  const FindDetailScreen({required this.vocabList});
 
   @override
   Widget build(BuildContext context) {
@@ -15,35 +17,43 @@ class VocabScreen extends StatelessWidget {
       init: VocabController(),
       builder: (controller) {
         return Scaffold(
-            appBar: AppBar(
-              title: AutoText("${controller.vocabList.length}"),
+          appBar: AppBar(
+            title: AutoText("${controller.findList.length}"),
+          ),
+          body: Container(
+            width: size.width,
+            height: size.height,
+            child: Column(
+              children: [
+                buildVocapList(),
+              ],
             ),
-            body: Container(
-              width: size.width,
-              height: size.height,
-              child: controller.vocabList.isEmpty
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : SafeArea(
-                      child: Column(
-                        children: [
-                          buildVocapList(controller),
-                        ],
-                      ),
-                    ),
-            ));
+          ),
+        );
       },
     );
   }
 
-  Widget buildVocapList(VocabController controller) {
+  // Scaffold(
+  //     appBar: AppBar(),
+  //     body: Container(
+  //       width: size.width,
+  //       height: size.height,
+  //       child: Column(
+  //         children: [
+  //           buildVocapList(),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+
+  Widget buildVocapList() {
     return Expanded(
       child: ListView.builder(
         shrinkWrap: true,
-        itemCount: controller.vocabList.length,
+        itemCount: vocabList.length,
         itemBuilder: (BuildContext context, int index) {
-          VocabModel vocab = controller.vocabList[index];
+          VocabModel vocab = vocabList[index];
           return GestureDetector(
             onTap: () {
               Get.to(() => VocabDetailScreen(vocab: vocab));

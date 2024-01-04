@@ -9,6 +9,24 @@ class MenuModel {
 }
 
 List<MenuModel> menuList = [
-  MenuModel(name: 'Vocabulary', icon: Icons.abc, route: Approutes.vocab),
-  MenuModel(name: 'Add Vocabulary', icon: Icons.abc, route: Approutes.vocab_add)
+  MenuModel(
+    name: 'Vocabulary',
+    icon: Icons.abc,
+    route: Approutes.vocab,
+  ),
+  MenuModel(
+    name: 'Add Vocabulary',
+    icon: Icons.abc,
+    route: Approutes.vocab_add,
+  ),
+  MenuModel(
+    name: 'Find A-Z',
+    icon: Icons.abc,
+    route: Approutes.find_letter,
+  ),
+  MenuModel(
+    name: 'Random',
+    icon: Icons.abc,
+    route: Approutes.random,
+  )
 ];

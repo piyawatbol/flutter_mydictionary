@@ -7,8 +7,14 @@ class CustomButton extends StatelessWidget {
   final VoidCallback ontap;
   final double? width;
   final double? height;
-  const CustomButton(
-      {required this.ontap, this.title, this.width, this.height = 50});
+  final Color? color;
+  const CustomButton({
+    required this.ontap,
+    this.title,
+    this.width,
+    this.height = 50,
+    this.color = Colors.black,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +23,7 @@ class CustomButton extends StatelessWidget {
       height: height,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+          backgroundColor: MaterialStateProperty.all<Color>(color!),
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius:
