@@ -12,6 +12,7 @@ class VocabController extends GetxController {
   bool statusLoading = false;
   TextEditingController word = TextEditingController();
   TextEditingController mean = TextEditingController();
+  bool hideMean = true;
 
   @override
   void onInit() {
@@ -30,11 +31,14 @@ class VocabController extends GetxController {
   }
 
   getVocabOnlyletter(letter) async {
+    statusLoading = true;
+    update();
     final response = await VocabApi.getVocabOnlyletter(letter);
     if (response['message'] == 'Success') {
       findList.clear();
       findList.addAll(response['data']
           .map<VocabModel>((values) => VocabModel.fromJson(values)));
+      statusLoading = false;
       update();
       Get.to(() => FindDetailScreen(vocabList: findList));
     }
@@ -44,6 +48,7 @@ class VocabController extends GetxController {
     final response = await VocabApi.getRandom();
     if (response['message'] == 'Success') {
       random = VocabModel.fromJson(response['data']);
+      hideMean = true;
       update();
     }
   }
@@ -60,7 +65,7 @@ class VocabController extends GetxController {
       word.clear();
       mean.clear();
       update();
-      Get.back();
+      // Get.back();
     }
   }
 

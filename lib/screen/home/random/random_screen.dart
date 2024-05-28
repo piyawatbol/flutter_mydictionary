@@ -27,13 +27,19 @@ class RandomScreen extends StatelessWidget {
                     : Column(
                         children: [
                           AutoText(
-                            "${controller.random?.mean}",
-                            fontSize: 40,
-                          ),
-                          AutoText(
                             "${controller.random?.word}",
                             fontSize: 40,
                           ),
+                          SizedBox(height: 20),
+                          controller.hideMean
+                              ? AutoText(
+                                  "******",
+                                  fontSize: 40,
+                                )
+                              : AutoText(
+                                  "${controller.random?.mean}",
+                                  fontSize: 40,
+                                ),
                         ],
                       ),
                 SizedBox(height: size.height * 0.1),
@@ -41,6 +47,14 @@ class RandomScreen extends StatelessWidget {
                   title: "Random",
                   ontap: () {
                     controller.getRandom();
+                  },
+                ),
+                SizedBox(height: 10),
+                CustomButton(
+                  title: "Show mean",
+                  ontap: () {
+                    controller.hideMean = false;
+                    controller.update();
                   },
                 ),
               ],

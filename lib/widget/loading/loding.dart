@@ -16,7 +16,7 @@ class LoadingPage extends StatelessWidget {
             Container(
               width: size.width,
               height: size.height,
-              color: Colors.white10,
+              color: Colors.white38,
             ),
             Positioned(
               child: Container(

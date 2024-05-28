@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mydictionary/controllers/vacab_controller.dart';
+import 'package:flutter_mydictionary/widget/loading/loding.dart';
 import 'package:get/get.dart';
 
 class FindLetterScreen extends StatelessWidget {
@@ -19,9 +20,9 @@ class FindLetterScreen extends StatelessWidget {
           return Container(
             width: size.width,
             height: size.height,
-            child: Column(
+            child: Stack(
               children: [
-                Expanded(
+                Container(
                   child: GridView.builder(
                     padding: EdgeInsets.symmetric(horizontal: 20),
                     itemCount: alphabet.length,
@@ -44,7 +45,8 @@ class FindLetterScreen extends StatelessWidget {
                       );
                     },
                   ),
-                )
+                ),
+                LoadingPage(statusLoading: controller.statusLoading)
               ],
             ),
           );
