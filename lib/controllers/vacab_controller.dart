@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_mydictionary/models/vocab_model.dart';
 import 'package:flutter_mydictionary/screen/home/find/find_detail_screen.dart';
 import 'package:flutter_mydictionary/serviecs/apis/vocab/vocab_api.dart';
@@ -22,9 +23,9 @@ class VocabController extends GetxController {
 
   getVocab() async {
     final response = await VocabApi.getVocab();
-    if (response['message'] == 'Success') {
+    if (response.isSucces) {
       vocabList.clear();
-      vocabList.addAll(response['data']
+      vocabList.addAll(response.data
           .map<VocabModel>((values) => VocabModel.fromJson(values)));
       update();
     }
@@ -34,9 +35,9 @@ class VocabController extends GetxController {
     statusLoading = true;
     update();
     final response = await VocabApi.getVocabOnlyletter(letter);
-    if (response['message'] == 'Success') {
+    if (response.isSucces) {
       findList.clear();
-      findList.addAll(response['data']
+      findList.addAll(response.data
           .map<VocabModel>((values) => VocabModel.fromJson(values)));
       statusLoading = false;
       update();
@@ -46,8 +47,8 @@ class VocabController extends GetxController {
 
   getRandom() async {
     final response = await VocabApi.getRandom();
-    if (response['message'] == 'Success') {
-      random = VocabModel.fromJson(response['data']);
+    if (response.isSucces) {
+      random = VocabModel.fromJson(response.data);
       hideMean = true;
       update();
     }
@@ -56,10 +57,13 @@ class VocabController extends GetxController {
   addVocab() async {
     statusLoading = true;
     update();
-    Map<String, dynamic> body = {'word': word.text, 'mean': mean.text};
+    Map<String, dynamic> body = {
+      'word': word.text.toLowerCase(),
+      'mean': mean.text
+    };
     final response = await VocabApi.addVocab(body);
-    if (response['message'] == 'Success') {
-      ToastCustom("${response['data']['data']}", Colors.green);
+    if (response.isSucces) {
+      ToastCustom("${response.data['data']}", Colors.green);
       getVocab();
       statusLoading = false;
       word.clear();
@@ -73,8 +77,8 @@ class VocabController extends GetxController {
     statusLoading = true;
     update();
     final response = await VocabApi.countVocab(id);
-    if (response['message'] == 'Success') {
-      ToastCustom("${response['data']['data']}", Colors.green);
+    if (response.isSucces) {
+      ToastCustom("${response.data['data']}", Colors.green);
       getVocab();
       statusLoading = false;
       update();
@@ -86,8 +90,8 @@ class VocabController extends GetxController {
     statusLoading = false;
     update();
     final response = await VocabApi.deleteVocab(id);
-    if (response['message'] == 'Success') {
-      ToastCustom("${response['data']['data']}", Colors.green);
+    if (response.isSucces) {
+      ToastCustom("${response.data['data']}", Colors.green);
       statusLoading = false;
       update();
       getVocab();

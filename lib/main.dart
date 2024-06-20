@@ -9,7 +9,7 @@ import 'routes/routes.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
-  AppEnvironment.setupEnv(Environment.prod);
+  AppEnvironment.setupEnv(Environment.dev);
   runApp(const MyApp());
 }
 

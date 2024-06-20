@@ -1,10 +1,16 @@
 import 'dart:developer';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import '../../widget/toast/toast_custom.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../models/response_model.dart';
 
 class HttpRequest {
   static final Dio dio = Dio();
+  static Future<String?> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString("token") ?? "";
+    return token;
+  }
 
   static Future<Map<String, String>> buildHeaders({
     bool withAccessToken = false,
@@ -14,7 +20,12 @@ class HttpRequest {
     if (withContentType) {
       headers.putIfAbsent('Content-Type', () => 'application/json');
     }
-    if (withAccessToken) {}
+    if (withAccessToken) {
+      String? token = await getToken();
+      if (token != null) {
+        headers.putIfAbsent('Authorization', () => 'Bearer ' + token);
+      }
+    }
     return headers;
   }
 
@@ -25,59 +36,16 @@ class HttpRequest {
   }) async {
     final headers = await buildHeaders(withAccessToken: withAccessToken);
     try {
-      final response = await dio.post(
+      Response response = await dio.post(
         path,
         data: body,
         options: Options(headers: headers),
       );
 
-      return responseStatus(response);
+      return responseSuccess(response, path);
     } on DioException catch (e) {
-      log(e.message.toString());
-      log(e.toString());
-      return responseStatus(e.response);
-    }
-  }
-
-  static Future patch(
-    String path, {
-    Map<String, dynamic>? body,
-    bool withAccessToken = false,
-  }) async {
-    final headers = await buildHeaders(withAccessToken: withAccessToken);
-    try {
-      final response = await dio.patch(
-        path,
-        data: body,
-        options: Options(headers: headers),
-      );
-
-      return responseStatus(response);
-    } on DioException catch (e) {
-      log(e.message.toString());
-      log(e.toString());
-      return responseStatus(e.response);
-    }
-  }
-
-  static Future delete(
-    String path, {
-    Map<String, dynamic>? body,
-    bool withAccessToken = false,
-  }) async {
-    final headers = await buildHeaders(withAccessToken: withAccessToken);
-    try {
-      final response = await dio.delete(
-        path,
-        data: body,
-        options: Options(headers: headers),
-      );
-
-      return responseStatus(response);
-    } on DioException catch (e) {
-      log(e.message.toString());
-      log(e.toString());
-      return responseStatus(e.response);
+      log(e.response!.data.toString());
+      return responseError(e, path);
     }
   }
 
@@ -93,15 +61,53 @@ class HttpRequest {
         queryParameters: body,
         options: Options(headers: headers),
       );
-      return responseStatus(response);
+      return responseSuccess(response, path);
     } on DioException catch (e) {
-      log(e.message.toString());
       log(e.toString());
-      return responseStatus(e.response);
+      return responseError(e, path);
     }
   }
 
-  static Future<Map<String, dynamic>> postImage(
+  static Future patch(
+    String path, {
+    Map<String, dynamic>? body,
+    bool withAccessToken = false,
+  }) async {
+    final headers = await buildHeaders(withAccessToken: withAccessToken);
+    try {
+      Response response = await dio.patch(
+        path,
+        data: body,
+        options: Options(headers: headers),
+      );
+
+      return responseSuccess(response, path);
+    } on DioException catch (e) {
+      log(e.response!.data.toString());
+      return responseError(e, path);
+    }
+  }
+
+  static Future delete(
+    String path, {
+    Map<String, dynamic>? body,
+    bool withAccessToken = false,
+  }) async {
+    final headers = await buildHeaders(withAccessToken: withAccessToken);
+    try {
+      final response = await dio.delete(
+        path,
+        data: body,
+        options: Options(headers: headers),
+      );
+      return responseSuccess(response, path);
+    } on DioException catch (e) {
+      log(e.toString());
+      return responseError(e, path);
+    }
+  }
+
+  static Future postImage(
     String path, {
     dynamic body,
     bool withAccessToken = false,
@@ -113,44 +119,40 @@ class HttpRequest {
         data: body,
         options: Options(headers: headers),
       );
-
-      return responseStatus(response);
+      return responseSuccess(response, path);
     } on DioException catch (e) {
       log("error : ${e.message}");
       log(e.toString());
-      return responseStatus(e.response);
+      return responseError(e, path);
     }
   }
 
-  static Future<Map<String, dynamic>> responseStatus(response) async {
-    print("status => ${response.statusCode}");
+  static ResponseModel responseSuccess(Response response, path) {
+    log("status => ${response.statusCode} ${path}");
     switch (response.statusCode) {
       case 200:
-        Map<String, dynamic> massage = {
-          "message": "Success",
-          "data": response.data,
-        };
-        return massage;
+        return ResponseModel(isSucces: true, data: response.data);
       case 201:
-        Map<String, dynamic> massage = {
-          "message": "Success",
-          "data": response.data,
-        };
-        return massage;
+        return ResponseModel(isSucces: true, data: response.data);
+      default:
+        throw Exception('Failed to load province');
+    }
+  }
+
+  static ResponseModel responseError(DioException e, path) {
+    log("status => ${e.response!.statusCode} ${path}");
+    log("error :${e.response!.data}");
+    switch (e.response!.statusCode) {
       case 400:
-      case 403:
-        Map<String, dynamic> massage = {
-          "message": "Error",
-          "data": response.data
-        };
-        return massage;
+        return ResponseModel(isSucces: false, data: e.response!.data);
       case 401:
-        ToastCustom("${response.data}", Colors.red);
-        Map<String, dynamic> massage = {
-          "message": "Error",
-          "data": response.data
-        };
-        return massage;
+        return ResponseModel(isSucces: false, data: e.response!.data);
+      case 403:
+        return ResponseModel(isSucces: false, data: e.response!.data);
+      case 404:
+        return ResponseModel(isSucces: false, data: e.response!.data);
+      case 500:
+        return ResponseModel(isSucces: false, data: e.response!.data);
       default:
         throw Exception('Failed to load province');
     }

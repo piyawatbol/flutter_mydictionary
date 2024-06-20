@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mydictionary/controllers/vacab_controller.dart';
+import 'package:flutter_mydictionary/controllers/home_controller.dart';
 import 'package:flutter_mydictionary/models/menu_model.dart';
 import 'package:flutter_mydictionary/widget/autext/auto_text.dart';
 import 'package:get/get.dart';
@@ -10,8 +10,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return GetBuilder<VocabController>(
-      init: VocabController(),
+    return GetBuilder<HomeController>(
+      init: HomeController(),
       builder: (controller) {
         return Scaffold(
             appBar: AppBar(

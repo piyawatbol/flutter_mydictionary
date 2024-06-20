@@ -28,5 +28,15 @@ List<MenuModel> menuList = [
     name: 'Random',
     icon: Icons.abc,
     route: Approutes.random,
+  ),
+  MenuModel(
+    name: 'Oxford',
+    icon: Icons.adobe,
+    route: Approutes.oxford,
+  ),
+  MenuModel(
+    name: 'Add Oxford',
+    icon: Icons.adobe,
+    route: Approutes.oxford_add,
   )
 ];

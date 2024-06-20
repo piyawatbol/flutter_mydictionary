@@ -1,36 +1,41 @@
+import 'package:flutter_mydictionary/models/response_model.dart';
+
 import '../../../config/config.dart';
 import '../../https/http_request.dart';
 
 class VocabApi {
-  static Future getVocab() async {
-    final response = await HttpRequest.get("${AppEnvironment.baseUrl}");
+  static Future<ResponseModel> getVocab() async {
+    ResponseModel response = await HttpRequest.get("${AppEnvironment.baseUrl}/vocab");
     return response;
   }
 
-  static Future getVocabOnlyletter(letter) async {
-    final response =
-        await HttpRequest.post("${AppEnvironment.baseUrl}/$letter");
+  static Future<ResponseModel> getVocabOnlyletter(letter) async {
+    ResponseModel response =
+        await HttpRequest.post("${AppEnvironment.baseUrl}/vocab/$letter");
     return response;
   }
 
-  static Future getRandom() async {
-    final response = await HttpRequest.get("${AppEnvironment.baseUrl}/random");
+  static Future<ResponseModel> getRandom() async {
+    ResponseModel response =
+        await HttpRequest.get("${AppEnvironment.baseUrl}/vocab/random");
     return response;
   }
 
-  static Future addVocab(body) async {
-    final response =
-        await HttpRequest.post("${AppEnvironment.baseUrl}", body: body);
+  static Future<ResponseModel> addVocab(body) async {
+    ResponseModel response =
+        await HttpRequest.post("${AppEnvironment.baseUrl}/vocab", body: body);
     return response;
   }
 
-  static Future countVocab(id) async {
-    final response = await HttpRequest.patch("${AppEnvironment.baseUrl}/$id");
+  static Future<ResponseModel> countVocab(id) async {
+    ResponseModel response =
+        await HttpRequest.patch("${AppEnvironment.baseUrl}/vocab/$id");
     return response;
   }
 
-  static Future deleteVocab(id) async {
-    final response = await HttpRequest.delete("${AppEnvironment.baseUrl}/$id");
+  static Future<ResponseModel> deleteVocab(id) async {
+    ResponseModel response =
+        await HttpRequest.delete("${AppEnvironment.baseUrl}/vocab/$id");
     return response;
   }
 }
